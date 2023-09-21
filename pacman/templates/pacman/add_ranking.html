@@ -61,6 +61,7 @@ header {
     ]
     console.log(used_names)
 
+    document.querySelector('#id_name').focus();
     document.querySelector('#info-submit').onclick = function(e) {
         var userName = document.getElementById("id_name").value
         if (used_names.includes(userName)) {
