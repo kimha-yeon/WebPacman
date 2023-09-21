@@ -24,15 +24,22 @@ def start_game(request):
     return render(request, 'pacman/game.html', context)
 
 def add_ranking(request, score):
+    ranker_list = Ranker.objects.all()
     if request.method == 'POST':
         form = Ranker_form(request.POST)
         if form.is_valid():
             ranker = form.save(commit=False)
-            ranker.name = request.POST['name']
-            ranker.score = score
-            ranker.save()
-            return redirect('show_ranking')
+            name_list = Ranker.objects.filter(name=request.POST['name'])
+            if (len(name_list) > 0) :
+                form = Ranker_form()
+                context = {'form': form, 'score': score, 'ranker_list': ranker_list}
+                return render(request, 'pacman/add_ranking.html', context)
+            else:
+                ranker.name = request.POST['name']
+                ranker.score = score
+                ranker.save()
+                return redirect('show_ranking')
     else:
         form = Ranker_form()
-    context = {'form': form}
+    context = {'form': form, 'ranker_list': ranker_list}
     return render(request, 'pacman/add_ranking.html', context)
