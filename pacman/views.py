@@ -21,9 +21,7 @@ def start_game(request):
         limit_score = Ranker.objects.order_by('-score')[9:10]
         limit_score = limit_score[0].score
     else:
-        print("else문")
         ranker_list = Ranker.objects.all()
-        print(ranker_list, len(ranker_list)-1)
         limit_score = ranker_list[len(ranker_list)-1].score
     context = {
         'limit_score': limit_score

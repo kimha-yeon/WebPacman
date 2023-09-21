@@ -603,8 +603,16 @@ function generateRandomItem(){
     }
 }
 
+let padding = 0
 function circleCollidesWithRectangle({circle, rectangle}) {
-    const padding = 4
+    if (circle.speed == 5) {
+        padding = 2
+    } else if (circle.speed == 2 || circle.speed == 1) {
+        padding = 4
+    } else if (circle.speed = 7) {
+        padding = 0.5
+    }
+
     return (circle.position.y - circle.radius + circle.velocity.y <= rectangle.position.y + rectangle.height + padding
         && circle.position.x + circle.radius + circle.velocity.x >= rectangle.position.x - padding
         && circle.position.y + circle.radius + circle.velocity.y >= rectangle.position.y - padding
@@ -780,8 +788,8 @@ function animate() {
             scoreEl.innerHTML = score
             switch (item.type) {
             case 0 :
-                console.log('플레이어 속도 증가(작업중)')
-                player.speed = 5
+                console.log('플레이어 속도 증가')
+                player.speed = 7
                 setTimeout(() => {
                     player.speed = 5
                 }, 5000)

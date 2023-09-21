@@ -59,16 +59,12 @@ header {
         "{{ ranker_list.name }}",
         {% endfor %}
     ]
-    console.log(used_names)
 
     document.querySelector('#id_name').focus();
     document.querySelector('#info-submit').onclick = function(e) {
         var userName = document.getElementById("id_name").value
         if (used_names.includes(userName)) {
             alert("이미 존재하는 닉네임입니다.")
-            window.location.pathname = '/pacman/name_check/' + {{ score }}
-        } else {
-            window.location.pathname = '/pacman/add_ranking/' + {{ score }}
         }
     }
 </script>
