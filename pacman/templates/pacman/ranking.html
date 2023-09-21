@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Foldit:wght@500&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/de74b38e3b.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    @font-face {
+        font-family: pacmanfont;
+        src: url("/static/fonts/Pacmanfont.ttf");
+    }
+
+body {
+    background-color : black;
+    color : white;
+}
+
+header {
+    font-family: 'pacmanfont', cursive;
+    font-size: 100px;
+    color: yellow;
+}
+
+.wrapper {
+    width : 440px;
+    height : 540px;
+    margin: auto;
+    margin-top : 120px;
+    text-align : center;
+}
+
+.info_wrapper {
+    height : 30px;
+    text-align : right;
+}
+
+table {
+    width : 440px;
+}
+
+</style>
+<body>
+<div class="wrapper">
+    <div class="info_wrapper">
+        <i class="fa-solid fa-house" onclick="location.href='{% url 'index' %}'" style="color:white; font-size:25px;"></i>
+    </div>
+        <header>Ranking</header>
+        <table>
+            <thead>
+              <tr>
+                  <th style="width:10%;">순위</th>
+                  <th style="width:70%;">이름</th>
+                  <th style="width:20%;">점수</th>
+              </tr>
+            </thead>
+
+            <tbody>
+            {% for ranker in ranker_list %}
+              <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ ranker.name }}</td>
+                  <td>{{ ranker.score }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+</body>
+</html>

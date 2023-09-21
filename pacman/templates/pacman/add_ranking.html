@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Foldit:wght@500&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/de74b38e3b.js" crossorigin="anonymous"></script>
+</head>
+<style>
+
+@font-face {
+        font-family: pacmanfont;
+        src: url("/static/fonts/Pacmanfont.ttf");
+    }
+
+body {
+    background-color : black;
+    color : white;
+}
+
+header {
+    font-family: 'pacmanfont', cursive;
+    font-size: 100px;
+    color:yellow;
+}
+
+.wrapper {
+    width : 440px;
+    height : 540px;
+    margin: auto;
+    text-align : center;
+}
+
+.info_wrapper {
+    margin: 0 auto;
+    margin-top : 150px;
+    width : 440px;
+    height : 30px;
+    text-align : right;
+}
+</style>
+<body>
+<div class="info_wrapper">
+    <i class="fa-solid fa-house" onclick="location.href='{% url 'index' %}'" style="color:white; font-size:20px;"></i>
+</div>
+<div class="wrapper">
+    <header>New Record!</header>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" id="info-submit">등록</button>
+        </form>
+</div>
+<script>
+    var used_names = [
+        {% for ranker_list in ranker_list %}
+        "{{ ranker_list.name }}",
+        {% endfor %}
+    ]
+
+    document.querySelector('#id_name').focus();
+    document.querySelector('#info-submit').onclick = function(e) {
+        var userName = document.getElementById("id_name").value
+        if (used_names.includes(userName)) {
+            alert("이미 존재하는 닉네임입니다.")
+        }
+    }
+</script>
+</body>
+</html>

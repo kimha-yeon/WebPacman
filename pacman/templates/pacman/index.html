@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pacman</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Foldit:wght@500&display=swap" rel="stylesheet">
+</head>
+<style>
+    body {
+        background-color : black;
+        color : white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    header {
+        font-family: 'pacmanfont', cursive;
+        font-size: 100px;
+        color: yellow;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align : center;
+    }
+
+    .btn-jittery {
+        margin: 20px; /* 원하는 간격 설정 */
+        animation: jittery 3s infinite;
+    }
+
+    @keyframes jittery {
+        5%, 50% {
+            transform: scale(1);
+        }
+        10% {
+            transform: scale(0.9);
+        }
+        15% {
+            transform: scale(1.15);
+        }
+        20% {
+            transform: scale(1.15) rotate(-5deg);
+        }
+        25% {
+            transform: scale(1.15) rotate(5deg);
+        }
+        30% {
+            transform: scale(1.15) rotate(-3deg);
+        }
+        35% {
+            transform: scale(1.15) rotate(2deg);
+        }
+        40% {
+            transform: scale(1.15) rotate(0);
+        }
+    }
+
+    .centered-button {
+        margin: 15px; /* 원하는 간격 설정 */
+    }
+
+    .centered-image {
+        width: 70px;
+        height: 70px;
+    }
+    @font-face {
+        font-family: pacmanfont;
+        src: url("/static/fonts/Pacmanfont.ttf");
+    }
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header>Pacman</header>
+
+<img src="/static/img/ranking.png" class="centered-image" alt="랭킹 이미지">
+<button class="centered-button btn-jittery" onclick="location.href='{% url 'show_ranking' %}'">랭킹 보기</button>
+
+<img src="/static/img/start.png" class="centered-image" alt="게임 시작 이미지">
+<button class="centered-button btn-jittery" onclick="location.href='{% url 'start_game' %}'">게임 시작</button>
+</div>
+</body>
+</html>
