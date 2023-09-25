@@ -237,10 +237,13 @@ function resetGhost(level) {
     }
 
     if (level == 2) {
-        addGhost('grey')
+        addGhost('grey', 5)
     } else if (level == 3) {
-        addGhost('grey')
-        addGhost('orange')
+        addGhost('grey', 5)
+        addGhost('orange', 2)
+    } else if (level == 4) {
+        addGhost('grey', 5)
+        addGhost('orange', 5)
     }
 
   ghosts.push(new Ghost({position : {
@@ -273,16 +276,16 @@ function resetGhost(level) {
 
 }
 
-function addGhost(color){
+function addGhost(color, speed){
     if (color == 'grey') {
         ghosts.push(new Ghost({position : {
             x:Boundary.width * 4 + Boundary.width / 2,
             y:Boundary.height * 4 + Boundary.height / 2
           }, velocity : {
             x:0,
-            y:5
+            y:speed
           }, color : 'grey',
-          speed : 5
+          speed : speed
           }))
     } else if (color == 'orange') {
         ghosts.push(new Ghost({position : {
@@ -290,9 +293,9 @@ function addGhost(color){
             y:Boundary.height * 10 + Boundary.height / 2
           }, velocity : {
             x:0,
-            y:-2
+            y:-speed
           }, color : 'orange',
-          speed : 2
+          speed : speed
           }))
     }
 }
