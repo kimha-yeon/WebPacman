@@ -16,13 +16,12 @@ def show_ranking(request):
     return render(request, 'pacman/ranking.html', context)
 
 def start_game(request):
-    scores = Ranker.objects.order_by('-score')[:10]
-    if len(scores) >= 10:
+    scores = Ranker.objects.order_by('-score')[:10] # 게임 시작할 때 10등의 점수 미리 넘겨주기
+    if len(scores) >= 10: # 만약 리스트의 길이가 10명이 넘을 때, 10등의 점수를 넘겨줌
         limit_score = Ranker.objects.order_by('-score')[9:10]
         limit_score = limit_score[0].score
-    else:
-        ranker_list = Ranker.objects.all()
-        limit_score = ranker_list[len(ranker_list)-1].score
+    else: # 랭커가 아직 10명이 안찼을 경우, 무조건 랭커로 등록하기 위해 기준 점수를 0점으로 줌
+        limit_score = 0
     context = {
         'limit_score': limit_score
     }
