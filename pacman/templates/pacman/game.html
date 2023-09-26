@@ -170,12 +170,21 @@ class Ghost {
         this.prevCollisions = []
         this.speed = speed
         this.scared = false
+        this.death = false  //유령이 죽었을 경우 체크
     }
 
     draw() {
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = this.scared ? 'blue' : this.color
+        //c.fillStyle = this.scared ? 'blue' : this.color
+        if (this.scared && !this.death) { // "스케어 모드" 및 "데스 모드"가 아닌 경우
+            c.fillStyle = 'blue';
+        } else if (this.death) {
+            c.fillStyle = 'purple'; // 데스모드 보라색으로 설정.
+        } else {
+            c.fillStyle = this.color;
+            c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        }
         c.fill()
         c.closePath()
     }
@@ -746,7 +755,11 @@ function animate() {
         if (Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y
             ) < ghost.radius + player.radius)  {
                 if (ghost.scared) {
-                    ghosts.splice(i, 1)
+                    //ghosts.splice(i, 1)//유령삭제코드
+                     ghost.death = true; // "데스 모드"로 전환
+                     setTimeout(() => {
+                        ghost.death = false; // 10초 후에 원래 상태로 돌아갑니다.
+                      }, 10000);
                     score += 100
                     scoreEl.innerHTML = score
                 } else {
