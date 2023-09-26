@@ -300,7 +300,7 @@ function addGhost(color, speed){
     }
 }
 
-let level = 4
+let level = 1
 resetGhost(level)
 
 const player = new Player(
@@ -803,9 +803,6 @@ function animate() {
                 resetMap()
                 items.splice(0, items.length)
                 console.log('레벨2 : 유령 증가')
-                ghosts.forEach(ghost => {
-                    ghost.speed = 3
-                })
                 animationId = requestAnimationFrame(animate)
             }, 1000)
             break
