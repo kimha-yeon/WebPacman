@@ -239,20 +239,17 @@ let speed
 
 function resetGhost(level) {
     ghosts.splice(0, ghosts.length)
-    if (level == 1 || level == 2 || level == 3) {
-        speed = 2
-    } else if (level == 4) {
-        speed = 3
-    }
 
-    if (level == 2) {
+    if (level == 1) {
+        addGhost('grey', 2)
+    } else if (level == 2) {
         addGhost('grey', 3)
     } else if (level == 3) {
         addGhost('grey', 3)
         addGhost('orange', 2)
     } else if (level == 4) {
         addGhost('grey', 3)
-        addGhost('orange', 4)
+        addGhost('orange', 3)
     }
 
   ghosts.push(new Ghost({position : {
@@ -636,7 +633,7 @@ map.forEach((row, i) => {
 )
 
 function generateRandomItem(){
-    if (Math.random() > 0.995 && level != 3) {
+    if (Math.random() > 0.995 && level != 2) {
         const randomInt = Math.floor(Math.random() * 3) + 1 // 1~3
         let randomWidth = Math.floor(Math.random() * 8) + 1 // 1~9
         let randomHeight = Math.floor(Math.random() * 10) + 1 // 1~11
@@ -809,14 +806,13 @@ function animate() {
             case 2 :
             game_display.style.backgroundColor = 'rgba(0,0,0,0.7)'
             win_lose_text.innerHTML = 'To Level 2'
-            game_info_text.innerHTML = 'Say Hi to Our New Ghost!'
+            game_info_text.innerHTML = ''
             setTimeout(() => {
                 resetText()
                 resetPlayer()
                 resetGhost(level)
                 resetMap()
                 items.splice(0, items.length)
-                console.log('레벨2 : 유령 증가')
                 animationId = requestAnimationFrame(animate)
             }, 1000)
             break
@@ -824,14 +820,13 @@ function animate() {
             case 3 :
             game_display.style.backgroundColor = 'rgba(0,0,0,0.7)'
             win_lose_text.innerHTML = 'To Level 3'
-            game_info_text.innerHTML = 'No More Item'
+            game_info_text.innerHTML = ''
             setTimeout(() => {
                 resetText()
                 resetPlayer()
                 resetGhost(level)
                 resetMap()
                 items.splice(0, items.length)
-                console.log('레벨3 : 아이템 없음')
                 animationId = requestAnimationFrame(animate)
             }, 1000)
             break
@@ -839,17 +834,13 @@ function animate() {
             case 4:
             game_display.style.backgroundColor = 'rgba(0,0,0,0.7)'
             win_lose_text.innerHTML = 'To Level 4'
-            game_info_text.innerHTML = 'Ghosts are faster this time!'
+            game_info_text.innerHTML = ''
             setTimeout(() => {
                 resetText()
                 resetPlayer()
                 resetGhost(level)
                 resetMap()
                 items.splice(0, items.length)
-                console.log('레벨4 : 유령 속도 빨라짐')
-                ghosts.forEach(ghost => {
-                    ghost.speed = 4
-                })
                 animationId = requestAnimationFrame(animate)
             }, 1000)
             break
@@ -920,20 +911,19 @@ function animate() {
             scoreEl.innerHTML = score
             switch (item.type) {
             case 0 :
-                console.log('플레이어 속도 증가')
-                player.speed = 7
-                setTimeout(() => {
-                    // 스피드 5로 바꾸기 전에, 지금 안전한 위치에 있는지 체크하고, 안전하지 않은 위치에 있으면 위치 변경해주기
-                    player.speed = 5
-                }, 5000)
+                //player.speed = 7
+                //setTimeout(() => {
+                //    // 스피드 5로 바꾸기 전에, 지금 안전한 위치에 있는지 체크하고, 안전하지 않은 위치에 있으면 위치 변경해주기
+                //    player.speed = 5
+                //}, 5000)
+                
+                ghosts.splice(Math.floor(Math.random() * ghosts.length), 1)
                 break
             case 1 :
                 life += 1
                 lifeEl.innerHTML = life
-                console.log('life 획득')
                 break
             case 2 :
-                console.log('유령 속도 감소')
                  ghosts.forEach(ghost => {
                  ghost.speed = 1
                     setTimeout(() => {
