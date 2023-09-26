@@ -78,41 +78,48 @@ table {
         </table>
 </div>
 <script>
-    var port = 8081;
+    // Create a client instance
+    var client = new Paho.MQTT.Client('test.mosquitto.org.', 8081, "clientId");
 
-    var client = new Paho.MQTT.Client('192.168.0.172', Number(port), "clientId");
-
+    // set callback handlers
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
 
-
-    client.connect(
-        {onSuccess: onConnect}
-    );
+    // connect the client
+    client.connect({onSuccess:onConnect});
 
 
+    // called when the client connects
     function onConnect() {
-        console.log("onConnect");
-        client.subscribe("pacman"); //토픽 설정
-        client.publish('pacman', 'Hello mqtt')
-        client.publish('pacman', 'test')
-        client.publish('pacman', 'Hello mqtt')
-        client.publish('pacman', 'Hello mqtt')
+      // Once a connection has been made, make a subscription and send a message.
+      console.log("onConnect");
+      client.subscribe("pacman");
+      message = new Paho.MQTT.Message("MQTT Test");
+      message.destinationName = "pacman";
+      client.send(message);
+      message = new Paho.MQTT.Message("MQTT Test");
+      message.destinationName = "pacman";
+      client.send(message);
+      message = new Paho.MQTT.Message("MQTT Test");
+      message.destinationName = "pacman";
+      client.send(message);
+      message = new Paho.MQTT.Message("MQTT Test");
+      message.destinationName = "pacman";
+      client.send(message);
     }
 
-    function onConnectionLost(responseObject){
-        if(responseObject.errorCode != 0){
-            console.log("onConnectionLost:" + responseObject.errorMessage);
-        }
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+        console.log("onConnectionLost:"+responseObject.errorMessage);
+      }
     }
 
-
+    // called when a message arrives
     function onMessageArrived(message) {
-      console.log("메시지:", message);
-      console.log("목적지:", message.destinationName);
-      console.log("페이로드 :", message.payloadBytes);
-    };
-
+      //console.log("onMessageArrived:"+message.payloadString);
+      console.log("onMessageArrived:"+message.payloadBytes);
+    }
 </script>
 
 </body>

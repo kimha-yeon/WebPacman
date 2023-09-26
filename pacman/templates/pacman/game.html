@@ -237,13 +237,13 @@ function resetGhost(level) {
     }
 
     if (level == 2) {
-        addGhost('grey', 5)
+        addGhost('grey', 3)
     } else if (level == 3) {
-        addGhost('grey', 5)
+        addGhost('grey', 3)
         addGhost('orange', 2)
     } else if (level == 4) {
-        addGhost('grey', 5)
-        addGhost('orange', 5)
+        addGhost('grey', 3)
+        addGhost('orange', 4)
     }
 
   ghosts.push(new Ghost({position : {
@@ -657,16 +657,16 @@ function generateRandomItem(){
 
 let padding = 0
 function circleCollidesWithRectangle({circle, rectangle}) {
-    if (circle.speed == 5) {
+    if (circle.speed == 2 || circle.speed == 1) {
+        padding = 4
+    } else if (circle.speed == 3) {
+        padding = 3
+    } else if (circle.speed == 4) {
         padding = 2
-    } else if (circle.speed == 2 || circle.speed == 1) {
-        padding = 4
-    } else if (circle.speed = 7) {
-        padding = 0.5
-    } else if (circle.speed = 3) {
-        padding = 10
-    } else if (circle.speed = 4) {
-        padding = 4
+    } else if (circle.speed == 5) {
+        padding = 2
+    } else if (circle.speed == 7) {
+        padding = 0.7
     }
 
     return (circle.position.y - circle.radius + circle.velocity.y <= rectangle.position.y + rectangle.height + padding
@@ -699,7 +699,7 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:-player.speed}}, rectangle : boundary}))  {
                 player.velocity.y = 0
-                console.log('collide!')
+                console.log('collide!', padding)
                 break
             } else {
                 player.velocity.y = -player.speed
@@ -710,7 +710,7 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:-player.speed, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
-                console.log('collide!')
+                console.log('collide!', padding)
                 break
             } else {
                 player.velocity.x = -player.speed
@@ -721,7 +721,7 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:player.speed}}, rectangle : boundary}))  {
                 player.velocity.y = 0
-                console.log('collide!')
+                console.log('collide!', padding)
                 break
             } else {
                 player.velocity.y = player.speed
@@ -732,6 +732,7 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:player.speed, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
+                console.log('collide!', padding)
                 break
             } else {
                 player.velocity.x = player.speed
@@ -909,6 +910,7 @@ function animate() {
                 console.log('플레이어 속도 증가')
                 player.speed = 7
                 setTimeout(() => {
+                    // 스피드 5로 바꾸기 전에, 지금 안전한 위치에 있는지 체크하고, 안전하지 않은 위치에 있으면 위치 변경해주기
                     player.speed = 5
                 }, 5000)
                 break
