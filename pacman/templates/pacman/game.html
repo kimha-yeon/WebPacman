@@ -1048,23 +1048,64 @@ function animate() {
 
 animate()
 
+const mqttBroker = '192.168.0.174'; // MQTT 브로커 주소를 수정하세요.
+        const clientId = 'pacman' + parseInt(Math.random() * 100, 10);
+        var topic = 'test'; // MQTT 주제를 수정하세요.        
+        const client = new Paho.MQTT.Client(mqttBroker, Number(2883), clientId);
+        const connectOptions = {
+            onSuccess: onConnect,
+            onFailure: onFailure,
+        };
+        function onConnect() {
+            console.log('MQTT 클라이언트가 연결되었습니다.');
+            client.subscribe(topic);
+        }
+
+        function onFailure(err) {
+            console.error('MQTT 연결 실패:', err.errorMessage);
+        }
+
+
+
+        client.connect(connectOptions);
+
 addEventListener('keydown', ({key}) => {
   switch (key) {
       case 'w':
           keys.w.pressed = true
           lastKey = 'w'
+          var message = new Paho.MQTT.Message(String(key));
+  message.destinationName = key;
+  message.qos = 0;
+  client.send(message);
+  console.log('전송한 메시지:', key);
           break
       case 'a':
           keys.a.pressed = true
           lastKey = 'a'
+          var message = new Paho.MQTT.Message(String(key));
+  message.destinationName = key;
+  message.qos = 0;
+  client.send(message);
+  console.log('전송한 메시지:', key);
           break
       case 's':
           keys.s.pressed = true
           lastKey = 's'
+          var message = new Paho.MQTT.Message(String(key));
+  message.destinationName = key;
+  message.qos = 0;
+  client.send(message);
+  console.log('전송한 메시지:', key);
           break
       case 'd':
           keys.d.pressed = true
           lastKey = 'd'
+          var message = new Paho.MQTT.Message(String(key));
+  message.destinationName = key;
+  message.qos = 0;
+  client.send(message);
+  console.log('전송한 메시지:', key);
           break
   }
 })
