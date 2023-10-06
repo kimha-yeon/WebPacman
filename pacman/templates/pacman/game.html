@@ -77,6 +77,18 @@ table {
 
 
 <script>
+const chatSocket = new WebSocket(
+    'ws://'
+            + window.location.host
+            + '/ws/pacman/'
+            + 'room_pacman'
+            + '/'
+);
+
+chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
@@ -693,52 +705,95 @@ function deleteItem(itemNoToDel) {
     }, 3000)
 }
 
+
 let animationId
+let seqNo = 0
+ghosts.splice(0, ghosts.length) // 테스트 시 유령 없애기 위한 코드
 
 function animate() {
     animationId = requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height) // 매 프레임마다 그림을 다시 그림
-
     // 입력된 키값에 따라 방향 조절
     if (keys.w.pressed && lastKey === 'w') {
+        seqNo += 1
+        // 웹소켓 보내기
+        chatSocket.send(JSON.stringify({
+                            'posX' : player.position.x,
+                            'posY': player.position.y,
+                            'direction' : 0,
+                            'speed' : player.speed,
+                            'seqNo' : seqNo
+                        }))
+
+        // 다음 좌표 올 때까지 기다림
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            // 메시지 도착 시에 수정된 좌표 받기
+            console.log('onmsg :', data.posX, data.posY, data.seqNo)
+        };
+
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:-player.speed}}, rectangle : boundary}))  {
                 player.velocity.y = 0
-                console.log('collide!', padding)
+                console.log('collide!')
                 break
             } else {
                 player.velocity.y = -player.speed
             }
         }
     } else if (keys.a.pressed && lastKey === 'a') {
+        seqNo += 1
+        chatSocket.send(JSON.stringify({
+                                'posX' : player.position.x,
+                                'posY': player.position.y,
+                                'direction' : 1,
+                                'speed' : player.speed,
+                                'seqNo' : seqNo
+                            }))
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:-player.speed, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
-                console.log('collide!', padding)
+                console.log('collide!')
                 break
             } else {
                 player.velocity.x = -player.speed
             }
         }
     } else if (keys.s.pressed && lastKey === 's') {
+        seqNo += 1
+        chatSocket.send(JSON.stringify({
+                                'posX' : player.position.x,
+                                'posY': player.position.y,
+                                'direction' : 2,
+                                'speed' : player.speed,
+                                'seqNo' : seqNo
+                            }))
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:player.speed}}, rectangle : boundary}))  {
                 player.velocity.y = 0
-                console.log('collide!', padding)
+                console.log('collide!')
                 break
             } else {
                 player.velocity.y = player.speed
             }
         }
     } else if (keys.d.pressed && lastKey === 'd') {
+        seqNo += 1
+        chatSocket.send(JSON.stringify({
+                                'posX' : player.position.x,
+                                'posY': player.position.y,
+                                'direction' : 3,
+                                'speed' : player.speed,
+                                'seqNo' : seqNo
+                            }))
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:player.speed, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
-                console.log('collide!', padding)
+                console.log('collide!')
                 break
             } else {
                 player.velocity.x = player.speed
@@ -913,10 +968,9 @@ function animate() {
             case 0 :
                 //player.speed = 7
                 //setTimeout(() => {
-                //    // 스피드 5로 바꾸기 전에, 지금 안전한 위치에 있는지 체크하고, 안전하지 않은 위치에 있으면 위치 변경해주기
                 //    player.speed = 5
                 //}, 5000)
-                
+
                 ghosts.splice(Math.floor(Math.random() * ghosts.length), 1)
                 break
             case 1 :
@@ -1046,7 +1100,9 @@ function animate() {
     else if (player.velocity.y < 0) player.rotation = Math.PI * 1.5
 }
 
-animate()
+chatSocket.onopen = () => {
+    animate()
+}
 
 addEventListener('keydown', ({key}) => {
   switch (key) {

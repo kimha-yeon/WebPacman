@@ -78,48 +78,38 @@ table {
         </table>
 </div>
 <script>
-    // Create a client instance
-    var client = new Paho.MQTT.Client('test.mosquitto.org.', 8081, "clientId");
+    const roomName = 'pacman_constrol';
 
-    // set callback handlers
-    client.onConnectionLost = onConnectionLost;
-    client.onMessageArrived = onMessageArrived;
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/pacman/'
+        + roomName
+        + '/'
+    );
 
-    // connect the client
-    client.connect({onSuccess:onConnect});
+    chatSocket.onmessage = function(e) { // 메시지를 받으면 이 메시지의 next_position을 다음 경로로 삼는다
+        const data = JSON.parse(e.data);
+        console.log("pacman's next position : ", data.position)
+    };
 
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
 
-    // called when the client connects
-    function onConnect() {
-      // Once a connection has been made, make a subscription and send a message.
-      console.log("onConnect");
-      client.subscribe("pacman");
-      message = new Paho.MQTT.Message("MQTT Test");
-      message.destinationName = "pacman";
-      client.send(message);
-      message = new Paho.MQTT.Message("MQTT Test");
-      message.destinationName = "pacman";
-      client.send(message);
-      message = new Paho.MQTT.Message("MQTT Test");
-      message.destinationName = "pacman";
-      client.send(message);
-      message = new Paho.MQTT.Message("MQTT Test");
-      message.destinationName = "pacman";
-      client.send(message);
+    chatSocket.onopen = () => {
+        chatSocket.send(JSON.stringify({
+                'message': 'socket opened',
+                'current_position' : '',
+                'next_position' : ''
+        }));
     }
 
-    // called when the client loses its connection
-    function onConnectionLost(responseObject) {
-      if (responseObject.errorCode !== 0) {
-        console.log("onConnectionLost:"+responseObject.errorMessage);
-      }
-    }
-
-    // called when a message arrives
-    function onMessageArrived(message) {
-      //console.log("onMessageArrived:"+message.payloadString);
-      console.log("onMessageArrived:"+message.payloadBytes);
-    }
+    chatSocket.send(JSON.stringify({ // 키보드 입력이 들어오면 현재의 위치를 보낸다
+                'message': 'give me next position',
+                'current_position' : '100',
+                'next_position' : ''
+            }));
 </script>
 
 </body>
