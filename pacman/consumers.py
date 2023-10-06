@@ -12,6 +12,7 @@ import struct
 newPosX = 0
 newPosY = 0
 newSeqNo = 0
+i = 0
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -29,11 +30,14 @@ def on_message(client, userdata, msg):
     global newPosX
     global newPosY
     global newSeqNo
+    global i
     try:
         print('3) 제어기 -> 웹소켓 :', struct.unpack('7h', msg.payload))
         newPosX = msg.payload[2]
         newPosY = msg.payload[3]
         newSeqNo = msg.payload[6]
+        i += 1
+        print("3)", i)
     except:
         print("unpack fail")
 
@@ -55,6 +59,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     client.on_publish = on_publish
 
     client.connect(host, port)
+    client.subscribe("pacman/next")
+    #client.loop_forever()
 
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
@@ -100,9 +106,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
         # print("chat_msg :", posX, posY, seqNo)
+        """
         ChatConsumer.client.subscribe("pacman/next")
-        ChatConsumer.client.loop_forever()
-        print('확인 :', seqNo, newSeqNo)
+        ChatConsumer.client.loop(1)
+        print('확인 :', seqNo, newSeqNo, i)
+        """
 
         if seqNo == newSeqNo :
             ChatConsumer.client.loop_stop()
