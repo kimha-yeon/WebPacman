@@ -735,12 +735,13 @@ function animate() {
                             'seqNo' : seqNo
                         }))
 
-        console.log("대기 전:", receivedSeqNo, seqNo)
+        //console.log("대기 전:", receivedSeqNo, seqNo)
         // onmessage가 실행될 때 즉, 좌표가 바뀔 때까지 기다리기 -> seqNo으로 확인 가능
-        if (receivedSeqNo != seqNo) { // seqNo가 맞지 않으면
-             setTimeout(() => console.log("waited for 100ms"), 10);
-        }
-        console.log("대기 후:", receivedSeqNo, seqNo)
+        //if (receivedSeqNo != seqNo) { // seqNo가 맞지 않으면
+        //     setTimeout(() => console.log("waited for 100ms"), 10);
+        //}
+        //console.log("대기 후:", receivedSeqNo, seqNo)
+
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:-player.speed}}, rectangle : boundary}))  {
@@ -761,11 +762,6 @@ function animate() {
                             'seqNo' : seqNo
                         }))
 
-        console.log(receivedSeqNo, seqNo)
-        // onmessage가 실행될 때 즉, 좌표가 바뀔 때까지 기다리기 -> seqNo으로 확인 가능
-        if (receivedSeqNo != seqNo) { // seqNo가 맞지 않으면
-             setTimeout(() => console.log("waited for 100ms"), 10);
-        }
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:-player.speed, y:0}}, rectangle : boundary}))  {
@@ -786,11 +782,6 @@ function animate() {
                             'seqNo' : seqNo
                         }))
 
-        console.log(receivedSeqNo, seqNo)
-        // onmessage가 실행될 때 즉, 좌표가 바뀔 때까지 기다리기 -> seqNo으로 확인 가능
-        if (receivedSeqNo != seqNo) { // seqNo가 맞지 않으면
-             setTimeout(() => console.log("waited for 10ms"), 10);
-        }
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:player.speed}}, rectangle : boundary}))  {
@@ -811,11 +802,6 @@ function animate() {
                             'seqNo' : seqNo
                         }))
 
-        console.log(receivedSeqNo, seqNo)
-        // onmessage가 실행될 때 즉, 좌표가 바뀔 때까지 기다리기 -> seqNo으로 확인 가능
-        if (receivedSeqNo != seqNo) { // seqNo가 맞지 않으면
-             setTimeout(() => console.log("waited for 100ms"), 10);
-        }
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:player.speed, y:0}}, rectangle : boundary}))  {
