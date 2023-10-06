@@ -714,11 +714,11 @@ ghosts.splice(0, ghosts.length) // 테스트 시 유령 없애기 위한 코드
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     // 메시지 도착 시에 수정된 좌표 받기
-    player.position.x = data.posX
-    player.position.y = data.posY
-    receivedSeqNo = data.seqNo
+    //player.position.x = data.posX
+    //player.position.y = data.posY
+    //receivedSeqNo = data.seqNo
     console.log('다음 메시지를 받음 :', data.posX, data.posY, data.seqNo)
-};
+}
 
 
 function animate() {
@@ -746,7 +746,6 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:-player.speed}}, rectangle : boundary}))  {
                 player.velocity.y = 0
-                console.log('collide!')
                 break
             } else {
                 player.velocity.y = -player.speed
@@ -766,7 +765,6 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:-player.speed, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
-                console.log('collide!')
                 break
             } else {
                 player.velocity.x = -player.speed
@@ -786,7 +784,6 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:player.speed}}, rectangle : boundary}))  {
                 player.velocity.y = 0
-                console.log('collide!')
                 break
             } else {
                 player.velocity.y = player.speed
@@ -806,10 +803,11 @@ function animate() {
             const boundary = boundaries[i]
             if (circleCollidesWithRectangle({circle : {...player, velocity : {x:player.speed, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
-                console.log('collide!')
+                console.log("충돌이라 멈춤")
                 break
             } else {
                 player.velocity.x = player.speed
+                console.log("충돌하지 않아 방향을 조절함")
             }
         }
     }

@@ -46,21 +46,21 @@ def on_publish(client, userdata, result):
     pass
 
 
+client = mqtt.Client()
+host = '192.168.0.172'
+port = 1883
+
+client.on_connect = on_connect
+client.on_disconnect = on_disconnect
+client.on_subscribe = on_subscribe
+client.on_message = on_message
+client.on_publish = on_publish
+
+client.connect(host, port)
+client.subscribe("pacman/next")
+#client.loop_forever()
+
 class ChatConsumer(AsyncWebsocketConsumer):
-
-    client = mqtt.Client()
-    host = '192.168.0.172'
-    port = 1883
-
-    client.on_connect = on_connect
-    client.on_disconnect = on_disconnect
-    client.on_subscribe = on_subscribe
-    client.on_message = on_message
-    client.on_publish = on_publish
-
-    client.connect(host, port)
-    client.subscribe("pacman/next")
-    #client.loop_forever()
 
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
@@ -87,7 +87,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print("1) js -> 웹소켓 :", posX, posY, seqNo)
 
         dataToSend = struct.pack('7h', posX, posY, 100, 100, direction, speed, seqNo)
-        ChatConsumer.client.publish("pacman/current", dataToSend)
+        client.publish("pacman/current", dataToSend)
         print("2) 웹소켓 -> 제어기 : ", posX, posY, seqNo)
 
         # Send message to room group
@@ -106,14 +106,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
         # print("chat_msg :", posX, posY, seqNo)
-        """
-        ChatConsumer.client.subscribe("pacman/next")
-        ChatConsumer.client.loop(1)
-        print('확인 :', seqNo, newSeqNo, i)
-        """
 
-        if seqNo == newSeqNo :
-            ChatConsumer.client.loop_stop()
+        #client.loop_forever()
+        print('확인 :', seqNo, newSeqNo, i)
+
+        if seqNo == newSeqNo:
+            client.loop_stop()
             print("4) 루프 종료 : ", newPosX, newPosY, newSeqNo)
 
         # print("5) 웹소켓 -> js :", newPosX, newPosY, newSeqNo)
