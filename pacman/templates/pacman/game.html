@@ -694,6 +694,7 @@ function circleCollidesWithRectangle({circle, rectangle}) {
 }
 
 
+
 // 일정 시간이 지나면 먹지 않은 아이템 삭제
 function deleteItem(itemNoToDel) {
     setTimeout(() => {
@@ -707,19 +708,18 @@ function deleteItem(itemNoToDel) {
 
 
 let animationId
-let seqNo = 0
-let receivedSeqNo = 0
 ghosts.splice(0, ghosts.length) // 테스트 시 유령 없애기 위한 코드
+let nextX
+let nextY
+let seqNo = 0
 
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     // 메시지 도착 시에 수정된 좌표 받기
-    //player.position.x = data.posX
-    //player.position.y = data.posY
-    //receivedSeqNo = data.seqNo
-    console.log('다음 메시지를 받음 :', data.posX, data.posY, data.seqNo)
+    nextX = data.posX
+    nextY = data.posY
+    console.log('제어기에서 받은 값 :', data.posX, data.posY, data.seqNo)
 }
-
 
 function animate() {
     animationId = requestAnimationFrame(animate)
@@ -727,87 +727,88 @@ function animate() {
     // 입력된 키값에 따라 방향 조절
     if (keys.w.pressed && lastKey === 'w') {
         seqNo += 1
+        console.log('제어기에 보낸 값 :', player.position.x, player.position.y, 0, seqNo)
         chatSocket.send(JSON.stringify({
                             'posX' : player.position.x,
-                            'posY': player.position.y,
+                            'posY': player.position.x,
                             'direction' : 0,
                             'speed' : player.speed,
                             'seqNo' : seqNo
                         }))
-
-        //console.log("대기 전:", receivedSeqNo, seqNo)
-        // onmessage가 실행될 때 즉, 좌표가 바뀔 때까지 기다리기 -> seqNo으로 확인 가능
-        //if (receivedSeqNo != seqNo) { // seqNo가 맞지 않으면
-        //     setTimeout(() => console.log("waited for 100ms"), 10);
-        //}
-        //console.log("대기 후:", receivedSeqNo, seqNo)
-
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
-            if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:-player.speed}}, rectangle : boundary}))  {
+            if (circleCollidesWithRectangle({circle : {...player, position : {x:nextX, y:nextY}, velocity : {x:0, y:0}}, rectangle : boundary}))  {
                 player.velocity.y = 0
+                console.log("충돌0")
                 break
             } else {
                 player.velocity.y = -player.speed
+                console.log("안충돌0")
             }
         }
     } else if (keys.a.pressed && lastKey === 'a') {
         seqNo += 1
+        console.log('제어기에 보낸 값 :', player.position.x, player.position.y, 1, seqNo)
         chatSocket.send(JSON.stringify({
                             'posX' : player.position.x,
                             'posY': player.position.y,
-                            'direction' : 0,
+                            'direction' : 1,
                             'speed' : player.speed,
                             'seqNo' : seqNo
                         }))
 
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
-            if (circleCollidesWithRectangle({circle : {...player, velocity : {x:-player.speed, y:0}}, rectangle : boundary}))  {
+            if (circleCollidesWithRectangle({circle : {...player, position : {x:nextX, y:nextY}, velocity : {x:0, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
+                console.log("충돌1")
                 break
             } else {
                 player.velocity.x = -player.speed
+                console.log("안충돌1")
             }
         }
     } else if (keys.s.pressed && lastKey === 's') {
         seqNo += 1
+        console.log('제어기에 보낸 값 :', player.position.x, player.position.y, 2, seqNo)
         chatSocket.send(JSON.stringify({
                             'posX' : player.position.x,
                             'posY': player.position.y,
-                            'direction' : 0,
+                            'direction' : 2,
                             'speed' : player.speed,
                             'seqNo' : seqNo
                         }))
 
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
-            if (circleCollidesWithRectangle({circle : {...player, velocity : {x:0, y:player.speed}}, rectangle : boundary}))  {
+            if (circleCollidesWithRectangle({circle : {...player, position : {x:nextX, y:nextY}, velocity : {x:0, y:0}}, rectangle : boundary}))  {
                 player.velocity.y = 0
+                console.log("충돌2")
                 break
             } else {
                 player.velocity.y = player.speed
+                console.log("충돌2")
             }
         }
     } else if (keys.d.pressed && lastKey === 'd') {
         seqNo += 1
+        console.log('제어기에 보낸 값 :', player.position.x, player.position.y, 3, seqNo)
         chatSocket.send(JSON.stringify({
                             'posX' : player.position.x,
                             'posY': player.position.y,
-                            'direction' : 0,
+                            'direction' : 3,
                             'speed' : player.speed,
                             'seqNo' : seqNo
                         }))
-
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i]
-            if (circleCollidesWithRectangle({circle : {...player, velocity : {x:player.speed, y:0}}, rectangle : boundary}))  {
+            if (circleCollidesWithRectangle({circle : {...player, position : {x:nextX, y:nextY}, velocity : {x:0, y:0}}, rectangle : boundary}))  {
                 player.velocity.x = 0
-                console.log("충돌이라 멈춤")
+                console.log("충돌3")
                 break
             } else {
                 player.velocity.x = player.speed
-                console.log("충돌하지 않아 방향을 조절함")
+                console.log("충돌3")
             }
         }
     }

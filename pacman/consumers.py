@@ -32,12 +32,13 @@ def on_message(client, userdata, msg):
     global newSeqNo
     global i
     try:
-        print('3) 제어기 -> 웹소켓 :', struct.unpack('7h', msg.payload))
-        newPosX = msg.payload[2]
-        newPosY = msg.payload[3]
-        newSeqNo = msg.payload[6]
+        unpacked_msg = struct.unpack('7h', msg.payload)
+        print('3) 제어기 -> 웹소켓 :', unpacked_msg)
+        newPosX = unpacked_msg[2]
+        newPosY = unpacked_msg[3]
+        newSeqNo = unpacked_msg[6]
         i += 1
-        print("3)", i)
+        print("3) 총 메시지를 받은 횟수 :", i)
     except:
         print("unpack fail")
 
@@ -58,7 +59,7 @@ client.on_publish = on_publish
 
 client.connect(host, port)
 client.subscribe("pacman/next")
-#client.loop_forever()
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -104,16 +105,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         speed = event["speed"]
         seqNo = event["seqNo"]
 
+        print("chat_msg :", posX, posY, seqNo)
 
-        # print("chat_msg :", posX, posY, seqNo)
+        #client.loop(.1)
+        print('확인 :', seqNo, '= ', newSeqNo, i)
 
-        #client.loop_forever()
-        print('확인 :', seqNo, newSeqNo, i)
+        while seqNo > newSeqNo :
+            client.loop(.1)
+        print('확인2 :', seqNo, '= ', newSeqNo, i)
+        print("확인2 :", newPosX, newPosY, newSeqNo)
 
-        if seqNo == newSeqNo:
-            client.loop_stop()
-            print("4) 루프 종료 : ", newPosX, newPosY, newSeqNo)
-
-        # print("5) 웹소켓 -> js :", newPosX, newPosY, newSeqNo)
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"posX": posX, "posY": posY, 'direction' : direction, 'speed' : speed, "seqNo" : seqNo}))
+        await self.send(text_data=json.dumps({"posX": newPosX, "posY": newPosY, 'direction' : direction, 'speed' : speed, "seqNo" : newSeqNo}))
